@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function App() {
-  const [books, setBooks] = useState([
-    { id: 1, title: "Lão Hạc", author: "Nam Cao", genre: "Văn học", year: 1943 },
-    { id: 2, title: "Sapiens", author: "Yuval Noah Harari", genre: "Khoa học", year: 2011 }
-  ]);
+  const [books, setBooks] = useState([]);
 
   const [form, setForm] = useState({
     title: '',
@@ -16,6 +13,26 @@ function App() {
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("Tất cả");
 
+  // 🚀 Tải dữ liệu từ localStorage khi load trang
+  useEffect(() => {
+    const data = localStorage.getItem("books");
+    if (data) {
+      setBooks(JSON.parse(data));
+    } else {
+      // Nếu chưa có localStorage, khởi tạo với danh sách mẫu
+      setBooks([
+        { id: 1, title: "Lão Hạc", author: "Nam Cao", genre: "Văn học", year: 1943 },
+        { id: 2, title: "Sapiens", author: "Yuval Noah Harari", genre: "Khoa học", year: 2011 }
+      ]);
+    }
+  }, []);
+
+  // 💾 Tự động lưu vào localStorage mỗi khi books thay đổi
+  useEffect(() => {
+    localStorage.setItem("books", JSON.stringify(books));
+  }, [books]);
+
+  // ➕ Thêm sách mới
   const handleAdd = () => {
     if (!form.title || !form.author || !form.genre || !form.year) return;
 
@@ -31,6 +48,7 @@ function App() {
     setForm({ title: '', author: '', genre: '', year: '' });
   };
 
+  // ❌ Xoá sách
   const handleDelete = (id) => {
     const updatedBooks = books.filter(book => book.id !== id);
     setBooks(updatedBooks);
@@ -48,9 +66,9 @@ function App() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Quản lý sách</h1>
-      <h3>Tổng số sách: {genreFilteredBooks.length}</h3>
-      <h2>Thêm sách mới</h2>
+      <h1>📚 Quản lý sách</h1>
+
+      <h2>➕ Thêm sách mới</h2>
       <input
         placeholder="Tên sách"
         value={form.title}
@@ -74,28 +92,28 @@ function App() {
       />
       <button onClick={handleAdd}>Thêm sách</button>
 
-      <h2>Tìm kiếm sách theo tên</h2>
+      <h2>🔍 Tìm kiếm sách theo tên</h2>
       <input
         placeholder="Nhập tên sách cần tìm"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <h2>Lọc sách theo thể loại</h2>
+      <h2>📂 Lọc sách theo thể loại</h2>
       <select value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)}>
         <option value="Tất cả">Tất cả</option>
         <option value="Văn học">Văn học</option>
         <option value="Khoa học">Khoa học</option>
         <option value="Công nghệ">Công nghệ</option>
         <option value="Tâm lý">Tâm lý</option>
-        {/* Thêm thể loại khác nếu cần */}
       </select>
 
-      <h2>Danh sách sách</h2>
+      <h2>📋 Danh sách sách</h2>
+      <h3>Tổng số sách: {genreFilteredBooks.length}</h3>
       {genreFilteredBooks.map((book) => (
-        <div key={book.id}>
+        <div key={book.id} style={{ border: "1px solid gray", margin: "5px", padding: "5px" }}>
           <p>
-            {book.title} - {book.author} - {book.genre} - {book.year}
+            <strong>{book.title}</strong> - {book.author} - {book.genre} - {book.year}
           </p>
           <button onClick={() => handleDelete(book.id)}>Xoá</button>
         </div>
