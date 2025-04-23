@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
   const [books, setBooks] = useState([
@@ -6,12 +6,62 @@ function App() {
     { id: 2, title: "Sapiens", author: "Yuval Noah Harari", genre: "Khoa học", year: 2011 }
   ]);
 
+  const [form, setForm] = useState({
+    title: '',
+    author: '',
+    genre: '',
+    year: ''
+  });
+
+  const handleAdd = () => {
+    if (!form.title || !form.author || !form.genre || !form.year) return;
+
+    const newBook = {
+      id: Date.now(),
+      title: form.title,
+      author: form.author,
+      genre: form.genre,
+      year: parseInt(form.year)
+    };
+
+    setBooks([...books, newBook]);
+    setForm({ title: '', author: '', genre: '', year: '' }); // reset form
+  };
+
   return (
-    <div>
-      <h1>Danh sách sách</h1>
-      {books.map(book => (
+    <div style={{ padding: '20px' }}>
+      <h1>Quản lý sách</h1>
+
+      <h2>Thêm sách mới</h2>
+      <input
+        placeholder="Tên sách"
+        value={form.title}
+        onChange={(e) => setForm({ ...form, title: e.target.value })}
+      />
+      <input
+        placeholder="Tác giả"
+        value={form.author}
+        onChange={(e) => setForm({ ...form, author: e.target.value })}
+      />
+      <input
+        placeholder="Thể loại"
+        value={form.genre}
+        onChange={(e) => setForm({ ...form, genre: e.target.value })}
+      />
+      <input
+        placeholder="Năm"
+        type="number"
+        value={form.year}
+        onChange={(e) => setForm({ ...form, year: e.target.value })}
+      />
+      <button onClick={handleAdd}>Thêm sách</button>
+
+      <h2>Danh sách sách</h2>
+      {books.map((book) => (
         <div key={book.id}>
-          <p>{book.title} - {book.author} - {book.genre} - {book.year}</p>
+          <p>
+            {book.title} - {book.author} - {book.genre} - {book.year}
+          </p>
           <button>Xoá</button>
         </div>
       ))}
