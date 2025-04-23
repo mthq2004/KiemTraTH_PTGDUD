@@ -49,7 +49,7 @@ function App() {
   return (
     <div style={{ padding: '20px' }}>
       <h1>Quản lý sách</h1>
-
+      <h3>Tổng số sách: {genreFilteredBooks.length}</h3>
       <h2>Thêm sách mới</h2>
       <input
         placeholder="Tên sách"
