@@ -13,11 +13,7 @@ function App() {
     year: ''
   });
 
-  // ✅ Hàm xoá sách
-  const handleDelete = (id) => {
-    const updatedBooks = books.filter(book => book.id !== id);
-    setBooks(updatedBooks);
-  };
+  const [search, setSearch] = useState("");
 
   const handleAdd = () => {
     if (!form.title || !form.author || !form.genre || !form.year) return;
@@ -33,6 +29,16 @@ function App() {
     setBooks([...books, newBook]);
     setForm({ title: '', author: '', genre: '', year: '' });
   };
+
+  const handleDelete = (id) => {
+    const updatedBooks = books.filter(book => book.id !== id);
+    setBooks(updatedBooks);
+  };
+
+  // 🔍 Lọc theo tên (không phân biệt hoa thường)
+  const filteredBooks = books.filter(book =>
+    book.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div style={{ padding: '20px' }}>
@@ -62,8 +68,15 @@ function App() {
       />
       <button onClick={handleAdd}>Thêm sách</button>
 
+      <h2>Tìm kiếm sách theo tên</h2>
+      <input
+        placeholder="Nhập tên sách cần tìm"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
       <h2>Danh sách sách</h2>
-      {books.map((book) => (
+      {filteredBooks.map((book) => (
         <div key={book.id}>
           <p>
             {book.title} - {book.author} - {book.genre} - {book.year}
