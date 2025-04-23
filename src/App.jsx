@@ -14,6 +14,7 @@ function App() {
   });
 
   const [search, setSearch] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("Tất cả");
 
   const handleAdd = () => {
     if (!form.title || !form.author || !form.genre || !form.year) return;
@@ -35,10 +36,15 @@ function App() {
     setBooks(updatedBooks);
   };
 
-  // 🔍 Lọc theo tên (không phân biệt hoa thường)
-  const filteredBooks = books.filter(book =>
+  // 🔍 Tìm kiếm theo tên (không phân biệt hoa thường)
+  const searchFilteredBooks = books.filter(book =>
     book.title.toLowerCase().includes(search.toLowerCase())
   );
+
+  // 📌 Lọc theo thể loại
+  const genreFilteredBooks = selectedGenre === "Tất cả"
+    ? searchFilteredBooks
+    : searchFilteredBooks.filter(book => book.genre === selectedGenre);
 
   return (
     <div style={{ padding: '20px' }}>
@@ -75,8 +81,18 @@ function App() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
+      <h2>Lọc sách theo thể loại</h2>
+      <select value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)}>
+        <option value="Tất cả">Tất cả</option>
+        <option value="Văn học">Văn học</option>
+        <option value="Khoa học">Khoa học</option>
+        <option value="Công nghệ">Công nghệ</option>
+        <option value="Tâm lý">Tâm lý</option>
+        {/* Thêm thể loại khác nếu cần */}
+      </select>
+
       <h2>Danh sách sách</h2>
-      {filteredBooks.map((book) => (
+      {genreFilteredBooks.map((book) => (
         <div key={book.id}>
           <p>
             {book.title} - {book.author} - {book.genre} - {book.year}
