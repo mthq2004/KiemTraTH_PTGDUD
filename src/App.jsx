@@ -13,6 +13,12 @@ function App() {
     year: ''
   });
 
+  // ✅ Hàm xoá sách
+  const handleDelete = (id) => {
+    const updatedBooks = books.filter(book => book.id !== id);
+    setBooks(updatedBooks);
+  };
+
   const handleAdd = () => {
     if (!form.title || !form.author || !form.genre || !form.year) return;
 
@@ -25,7 +31,7 @@ function App() {
     };
 
     setBooks([...books, newBook]);
-    setForm({ title: '', author: '', genre: '', year: '' }); // reset form
+    setForm({ title: '', author: '', genre: '', year: '' });
   };
 
   return (
@@ -62,7 +68,7 @@ function App() {
           <p>
             {book.title} - {book.author} - {book.genre} - {book.year}
           </p>
-          <button>Xoá</button>
+          <button onClick={() => handleDelete(book.id)}>Xoá</button>
         </div>
       ))}
     </div>
